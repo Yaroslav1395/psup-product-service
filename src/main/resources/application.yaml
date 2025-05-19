@@ -1,0 +1,19 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: PRODUCT_SERVICE
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/product_db
+    username: admin
+    password: admin
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/main-changelog.xml
+    default-schema: public
+    url: jdbc:postgresql://localhost:5432/product_db
+    user: admin
+    password: admin
+logging:
+  level:
+    org.springframework.data.r2dbc: DEBUG
