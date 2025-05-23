@@ -20,7 +20,7 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=local
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/product_db
+      - SPRING_R2DBC_URL=jdbc:postgresql://postgres:5432/product_db
       - SPRING_LIQUIBASE_URL=jdbc:postgresql://postgres:5432/product_db
     networks:
       - product-net
