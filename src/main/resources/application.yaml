@@ -1,8 +1,8 @@
 server:
-  port: 8081
+  port: 8080
 spring:
   application:
-    name: PRODUCT_SERVICE
+    name: PRODUCT-SERVICE
   r2dbc:
     url: r2dbc:h2:mem:///product_db;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
     username: admin
@@ -14,6 +14,9 @@ spring:
     url: jdbc:h2:mem:product_db;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
     user: admin
     password: admin
+  cloud:
+    discovery:
+      enabled: false
 logging:
   level:
     org.springframework.data.r2dbc: DEBUG

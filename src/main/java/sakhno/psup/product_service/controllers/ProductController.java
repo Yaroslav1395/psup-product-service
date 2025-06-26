@@ -9,7 +9,7 @@ import sakhno.psup.product_service.models.ProductEntity;
 import sakhno.psup.product_service.services.ProductService;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("api/v1/product-service/products")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
