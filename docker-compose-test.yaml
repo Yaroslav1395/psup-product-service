@@ -26,6 +26,7 @@ services:
       - CONFIG_SERVER_USERNAME:myUsername
       - CONFIG_SERVER_PASSWORD:mySecretPassword
       - EUREKA_URL=http://eureka-server:8761/eureka
+      - ZIPKIN_URL=http://zipkin-server:9411/api/v2/spans
     networks:
       - product-net
       - psup-shared-net
