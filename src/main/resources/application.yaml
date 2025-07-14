@@ -63,8 +63,12 @@ management:
     sampling:
       probability: 0.0
 logging:
+  pattern:
+    level: "%5p [${spring.application.name}, trace=%X{traceId:-}, span=%X{spanId:-}]"
   level:
     org.springframework.data.r2dbc: DEBUG
     io.github.resilience4j: DEBUG
     reactor.retry: DEBUG
     org.springframework.cloud.circuitbreaker: DEBUG
+log:
+  path: ${user.home}/Universal_Trade_Platform/logs/product-service
