@@ -14,6 +14,14 @@ services:
   product-service:
     image: psup-product/product-service
     container_name: product_service
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
     depends_on:
       - postgres
     ports:
@@ -27,6 +35,8 @@ services:
       - CONFIG_SERVER_PASSWORD:mySecretPassword
       - EUREKA_URL=http://eureka-server:8761/eureka
       - ZIPKIN_URL=http://zipkin-server:9411/api/v2/spans
+    volumes:
+      - ~/Universal_Trade_Platform/logs/product-service:/root/Universal_Trade_Platform/logs/product-service
     networks:
       - product-net
       - psup-shared-net

@@ -20,6 +20,7 @@
         <docker.image.prefix>psup-product</docker.image.prefix>
         <docker.image.name>product-service</docker.image.name>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
+        <logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
     </properties>
     <dependencies>
         <!--Зависимости для взаимодействия через протокол http-->
@@ -135,6 +136,13 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-tracing</artifactId>
+        </dependency>
+
+        <!--Зависимости для логирования-->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback-encoder.version}</version>
         </dependency>
 
         <!--Зависимости для тестирования-->
