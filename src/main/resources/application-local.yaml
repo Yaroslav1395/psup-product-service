@@ -14,9 +14,29 @@ spring:
     url: jdbc:postgresql://localhost:5432/product_db
     user: admin
     password: admin
-  cloud:
-    discovery:
-      enabled: false
+  kafka:
+    consumer:
+      bootstrap-servers: ${KAFKA_BROKERS:localhost:9094,localhost:9095,localhost:9096}
+      group-id: product-service
+      auto-offset-reset: latest
+      properties:
+        spring.json.trusted.packages: sakhno.psup.product_service.events.consumer
+        spring.json.type.mapping: >
+          productTestEvent:sakhno.psup.product_service.events.consumer.ProductTestEvent
+    producer:
+      bootstrap-servers: ${KAFKA_BROKERS:localhost:9094,localhost:9095,localhost:9096}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      properties:
+        delivery-timeout-ms: ${KAFKA_DELIVERY_TIMEOUT_MS:20000}
+        linger-ms: ${KAFKA_LINGER_MS:0}
+        request.timeout.ms: ${KAFKA_REQUEST_TIMEOUT_MS:10000}
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: ${KAFKA_MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION:5}
+        spring.json.trusted.packages: sakhno.psup.storage_service.events.producer
+        spring.json.type.mapping: >
+          manufactureTestEvent:sakhno.psup.product_service.events.producer.ManufactureTestEvent
 resilience4j:
   circuitbreaker:
     configs:
@@ -66,10 +86,14 @@ logging:
   pattern:
     level: "%5p [${spring.application.name}, trace=%X{traceId:-}, span=%X{spanId:-}]"
   level:
-    org.springframework.data.r2dbc: DEBUG
-    io.github.resilience4j: DEBUG
-    reactor.retry: DEBUG
-    org.springframework.cloud.circuitbreaker: DEBUG
+    org.springframework.data.r2dbc: INFO
+    io.github.resilience4j: INFO
+    reactor.retry: INFO
+    org.springframework.cloud.circuitbreaker: INFO
 log:
   path: ${user.home}/Universal_Trade_Platform/logs/product-service
+manufacture:
+  service:
+    base:
+      url: ${MANUFACTURE_SERVICE_BASE_URL:http://localhost:8081}
 

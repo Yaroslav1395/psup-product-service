@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    config:
+      enabled: false
+      fail-fast: true
+    discovery:
+      enabled: false

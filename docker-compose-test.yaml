@@ -35,6 +35,11 @@ services:
       - CONFIG_SERVER_PASSWORD:mySecretPassword
       - EUREKA_URL=http://eureka-server:8761/eureka
       - ZIPKIN_URL=http://zipkin-server:9411/api/v2/spans
+      - KAFKA_BROKERS=broker-1:19092,broker-2:19092,broker-3:19092
+      - KAFKA_DELIVERY_TIMEOUT_MS=20000
+      - KAFKA_LINGER_MS=0
+      - KAFKA_REQUEST_TIMEOUT_MS=10000
+      - KAFKA_MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION=5
     volumes:
       - ~/Universal_Trade_Platform/logs/product-service:/root/Universal_Trade_Platform/logs/product-service
     networks:

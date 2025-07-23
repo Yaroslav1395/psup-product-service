@@ -72,3 +72,7 @@ logging:
     org.springframework.cloud.circuitbreaker: DEBUG
 log:
   path: ${user.home}/Universal_Trade_Platform/logs/product-service
+manufacture:
+  service:
+    base:
+      url: ${MANUFACTURE_SERVICE_BASE_URL:http://localhost:8081}

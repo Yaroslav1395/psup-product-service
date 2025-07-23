@@ -63,7 +63,7 @@
     </appender>
 
     <!-- Основной логгер -->
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="jsonConsole"/>
         <appender-ref ref="logFile"/>
     </root>
