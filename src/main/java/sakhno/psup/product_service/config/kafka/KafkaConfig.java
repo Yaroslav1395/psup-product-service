@@ -58,6 +58,7 @@ public class KafkaConfig {
      * - Повторная попытка 3 раза с задержкой 3 секунды
      * - Отправка в DLT при ошибке
      * - Указание типов ошибок для повторной и не повторной обработки
+     * - Разрешает добавлять traceId в сообщение
      * @param consumerFactory - фабрика для создания Kafka Consumer
      * @param kafkaTemplate - шаблон для отправки сообщений в DLT
      * @return настроенная фабрика Kafka Listener
@@ -72,6 +73,7 @@ public class KafkaConfig {
         ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
         factory.setCommonErrorHandler(errorHandler);
+        factory.getContainerProperties().setObservationEnabled(true);
         return factory;
     }
 
@@ -133,10 +135,13 @@ public class KafkaConfig {
     /**
      * Бин KafkaTemplate для отправки сообщений типа Object с ключом типа String.
      * Использует фабрику продюсера для создания и настройки Kafka-продюсеров.
+     * Разрешает добавлять traceId в сообщение
      */
     @Bean
     public KafkaTemplate<String, Object> kafkaTemplate(ProducerFactory<String, Object> producerFactory) {
-        return new KafkaTemplate<>(producerFactory);
+        KafkaTemplate<String, Object> kafkaTemplate = new KafkaTemplate<>(producerFactory);
+        kafkaTemplate.setObservationEnabled(true);
+        return kafkaTemplate;
     }
 
     /**
