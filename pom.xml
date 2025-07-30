@@ -21,6 +21,8 @@
         <docker.image.name>product-service</docker.image.name>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
         <logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
+        <maven.resources.plugin>3.3.1</maven.resources.plugin>
+        <asciidoctor.maven.plugin>3.2.0</asciidoctor.maven.plugin>
     </properties>
     <dependencies>
         <!--Зависимости для взаимодействия через протокол http-->
@@ -149,11 +151,35 @@
             <version>${logstash-logback-encoder.version}</version>
         </dependency>
 
+        <!--Зависимости для валидации данных-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!--Зависимости для документации-->
+        <!--<dependency>
+            <groupId>org.springframework.restdocs</groupId>
+            <artifactId>spring-restdocs-mockmvc</artifactId>
+            <scope>test</scope>
+        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.restdocs</groupId>
+            <artifactId>spring-restdocs-webtestclient</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!--Зависимости для тестирования-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.projectreactor</groupId>
@@ -163,6 +189,21 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -244,6 +285,70 @@
                         </image>
                     </images>
                 </configuration>
+            </plugin>
+            <!--
+                Этот плагин используется для генерации документации в формате HTML на основе Asciidoc.
+                Prepare-package - Документация генерируется перед упаковкой проекта в JAR.
+                Process-asciidoc - Запускает обработку файлов Asciidoc (.adoc) и превращает их в HTML.
+                backend → html - Документ будет сгенерирован в формате HTML.
+                doctype → book - Используется стиль "книга" (подходит для больших руководств).
+                Spring REST Docs → Позволяет автоматически документировать API на основе тестов.
+            -->
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>${asciidoctor.maven.plugin}</version>
+                <executions>
+                    <execution>
+                        <id>generate-docs</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>html</backend>
+                            <doctype>book</doctype>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.springframework.restdocs</groupId>
+                        <artifactId>spring-restdocs-asciidoctor</artifactId>
+                        <version>${spring-restdocs.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <!--
+                Этот плагин используется для копирования файлов (ресурсов) в нужную директорию при сборке проекта.
+                Копирует сгенерированную документацию (например, из Asciidoctor) в папку static/docs.
+                Позволяет, например, раздавать документацию через Spring Boot (из папки static/).
+                Автоматизирует процесс, исключая необходимость копировать файлы вручную.
+            -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven.resources.plugin}</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.outputDirectory}/static/docs
+                            </outputDirectory>
+                            <resources>
+                                <resources>
+                                    <directory>
+                                        ${project.build.directory}/generated-docs
+                                    </directory>
+                                </resources>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
