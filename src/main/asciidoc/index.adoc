@@ -1,0 +1,73 @@
+= PSUP Product Service
+Ярослав Сахно
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectnums:
+
+PSUP Product Service — это компонент в микросервисной архитектуре универсальной платформы дистрибуции товаров.
+Сервис отвечает за каталогизацию продукции и управление её основными характеристиками.
+
+
+== Работа с сущностью "Категория"
+
+Сущность `Категория` используется для группировки товаров по типу. Каждая категория имеет уникальное имя и может содержать вложенные подкатегории.
+
+=== Архитектура
+
+* `CategoryController` — REST-контроллер, предоставляющий CRUD-интерфейс для категорий.
+* `CategoryService` — слой бизнес-логики.
+* `CategoryRepository` — реактивный репозиторий для доступа к данным.
+* `CategoryControllerTest` — модульные тесты и генерация документации с помощью Spring REST Docs.
+
+=== Получение категории по идентификатору
+
+Операция возвращает категорию по её `ID`.
+
+==== CURL-запрос
+include::{snippets}/get-category-by-id/curl-request.adoc[]
+
+==== HTTP-запрос
+include::{snippets}/get-category-by-id/httpie-request.adoc[]
+
+==== Параметры пути
+include::{snippets}/get-category-by-id/path-parameters.adoc[]
+
+==== HTTP-ответ
+include::{snippets}/get-category-by-id/http-response.adoc[]
+
+==== Тело ответа
+include::{snippets}/get-category-by-id/response-body.adoc[]
+
+==== Описание полей
+include::{snippets}/get-category-by-id/response-fields.adoc[]
+
+==== Ошибки
+
+При вызове этого метода возможны следующие ошибки:
+
+[cols="1,2,2", options="header"]
+|===
+| Код   | Сообщение              | Описание
+| 404   | `Категория не найдена` | Указанная категория не существует
+|===
+
+Пример ответа при ошибке:
+
+include::{snippets}/get-category-by-id-empty/http-response.adoc[]
+
+Описание полей при ошибке
+
+include::{snippets}/get-category-by-id-empty/response-fields.adoc[]
+
+
+
+
+
+
+== Примечания
+
+- Все взаимодействия производятся в реактивной парадигме с использованием WebFlux.
+- Документация создается автоматически на основании интеграционных тестов.
