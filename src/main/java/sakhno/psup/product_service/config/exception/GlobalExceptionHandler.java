@@ -69,7 +69,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateEntityException.class)
     public Mono<ResponseEntity<ResponseDto<Object>>> handleDuplicateEntityException(DuplicateEntityException ex) {
         log.warn("Нарушение уникальности записи в базе: {}", ex.getMessage());
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(ResponseDto.fail(ex.getMessage())));
+        return Mono.just(ResponseEntity.status(HttpStatus.CONFLICT).body(ResponseDto.fail(ex.getMessage())));
     }
 
     /**
