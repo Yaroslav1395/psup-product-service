@@ -27,6 +27,7 @@ import sakhno.psup.product_service.config.exception.GlobalExceptionHandler;
 import sakhno.psup.product_service.controllers.CategoryController;
 import sakhno.psup.product_service.dto.category.CategoryDto;
 import sakhno.psup.product_service.dto.category.CategorySaveDto;
+import sakhno.psup.product_service.dto.category.CategoryUpdateDto;
 import sakhno.psup.product_service.exceptions.all.DuplicateEntityException;
 import sakhno.psup.product_service.exceptions.all.EntityNotFoundException;
 import sakhno.psup.product_service.repositories.CategoryRepository;
@@ -283,6 +284,127 @@ class CategoryControllerTest {
                 ));
     }
 
+    @Test
+    void updateCategory() {
+        Mockito.when(categoryService.update(any(CategoryUpdateDto.class))).thenReturn(Mono.just(getValidCategoryDtoAfterUpdate()));
+
+        ConstrainedRuFields fields = new ConstrainedRuFields(CategoryUpdateDto.class);
+
+        webTestClient.put()
+                .uri("/api/v1/product-service/categories/category")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(getValidCategoryUpdateDto())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.state").isEqualTo("SUCCESS")
+                .jsonPath("$.message").isEqualTo("OK")
+                .jsonPath("$.data.id").isEqualTo(1L)
+                .jsonPath("$.data.name").isEqualTo("Обновленная категория")
+                .jsonPath("$.data.description").isEqualTo("Новое описание")
+                .jsonPath("$.data.createdUserId").isEqualTo(1L)
+                .jsonPath("$.data.updatedUserId").isEqualTo(1L)
+                .jsonPath("$.data.createdDate").isNotEmpty()
+                .jsonPath("$.data.updatedDate").isNotEmpty()
+                .consumeWith(document("update-category",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fields.withPath("id","Не может быть пустым. Должно быть больше 0").description("ID категории, которую нужно обновить"),
+                                fields.withPath("name", "Не может быть пустым. Должно содержать от 5 до 100 символов")
+                                        .description("Новое название категории"),
+                                fields.withPath("description", "Не может быть пустым. Должно содержать от 5 до 1000 символов")
+                                        .description("Новое описание категории")
+                        ),
+                        responseFields(
+                                fieldWithPath("data.id").description("Идентификатор категории"),
+                                fieldWithPath("data.name").description("Отредактированное название категории"),
+                                fieldWithPath("data.description").description("Отредактированное описание категории"),
+                                fieldWithPath("data.createdUserId").description("ID пользователя, создавшего запись"),
+                                fieldWithPath("data.updatedUserId").description("ID пользователя, обновившего запись"),
+                                fieldWithPath("data.createdDate").description("Дата создания"),
+                                fieldWithPath("data.updatedDate").description("Дата обновления"),
+                                fieldWithPath("state").description("Статус ответа: SUCCESS"),
+                                fieldWithPath("message").description("OK")
+                        )
+                ));
+    }
+
+    @Test
+    void updateCategory_duplicateName() {
+        Mockito.when(categoryService.update(any(CategoryUpdateDto.class)))
+                .thenReturn(Mono.error(new DuplicateEntityException("Категория с таким названием уже существует: Техника")));
+
+        webTestClient.put()
+                .uri("/api/v1/product-service/categories/category")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(getValidCategoryUpdateDto())
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.CONFLICT)
+                .expectBody()
+                .jsonPath("$.state").isEqualTo("FAIL")
+                .jsonPath("$.message").value(containsString("уже существует"))
+                .consumeWith(document("update-category-duplicate",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("data").description("null, так как обновление не удалось").optional(),
+                                fieldWithPath("message").description("Сообщение об ошибке"),
+                                fieldWithPath("state").description("Статус ответа: FAIL")
+                        )
+                ));
+    }
+
+    @Test
+    void updateCategory_validationError() {
+        CategoryUpdateDto invalidDto = new CategoryUpdateDto(null, "", "");
+
+        webTestClient.put()
+                .uri("/api/v1/product-service/categories/category")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(invalidDto)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.state").isEqualTo("FAIL")
+                .jsonPath("$.message").value(containsString("не может быть пустым"))
+                .consumeWith(document("update-category-validation-error",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("data").description("null, так как обновление не удалось").optional(),
+                                fieldWithPath("message").description("Сообщение об ошибке"),
+                                fieldWithPath("state").description("Статус ответа: FAIL")
+                        )
+                ));
+    }
+
+    @Test
+    void deleteCategory() {
+        Mockito.when(categoryService.deleteById(1L)).thenReturn(Mono.just(true));
+
+        webTestClient.delete()
+                .uri("/api/v1/product-service/categories/category/{id}", 1L)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.state").isEqualTo("SUCCESS")
+                .jsonPath("$.message").isEqualTo("OK")
+                .jsonPath("$.data").isEqualTo(true)
+                .consumeWith(document("delete-category",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("id").description("Идентификатор категории")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").description("true, если категория была удалена"),
+                                fieldWithPath("message").description("Сообщение об успехе"),
+                                fieldWithPath("state").description("Статус ответа: SUCCESS")
+                        )
+                ));
+    }
+
     private static class ConstrainedRuFields {
         private final ConstraintDescriptions constraintDescriptions;
 
@@ -346,6 +468,26 @@ class CategoryControllerTest {
                 .updatedUserId(null)
                 .createdDate(LocalDateTime.now())
                 .updatedDate(null)
+                .build();
+    }
+
+    CategoryUpdateDto getValidCategoryUpdateDto() {
+        return CategoryUpdateDto.builder()
+                .id(1L)
+                .name("Обновленная категория")
+                .description("Новое описание")
+                .build();
+    }
+
+    CategoryDto getValidCategoryDtoAfterUpdate() {
+        return CategoryDto.builder()
+                .id(1L)
+                .name("Обновленная категория")
+                .description("Новое описание")
+                .createdDate(LocalDateTime.now())
+                .updatedDate(LocalDateTime.now().plusHours(1))
+                .updatedUserId(1L)
+                .createdUserId(1L)
                 .build();
     }
 }
