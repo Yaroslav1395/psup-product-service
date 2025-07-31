@@ -33,7 +33,7 @@ public class CategoryController {
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .body(ResponseDto.empty("Категория не найдена")));
+                        .body(ResponseDto.empty("Категория +" + id + " не найдена")));
     }
 
     @GetMapping
@@ -41,6 +41,7 @@ public class CategoryController {
         return categoryService.getAll()
                 .doFirst(() -> log.info("Запрос на получение всех категорий продукции"))
                 .collectList()
+                .filter(list -> !list.isEmpty())
                 .map(ResponseDto::ok)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity

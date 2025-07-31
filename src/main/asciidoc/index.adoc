@@ -52,6 +52,7 @@ include::{snippets}/get-category-by-id/response-fields.adoc[]
 |===
 | Код   | Сообщение              | Описание
 | 404   | `Категория не найдена` | Указанная категория не существует
+| 400   | `Ошибка валидации`     | Передан некорректный параметр
 |===
 
 Пример ответа при ошибке:
@@ -62,8 +63,86 @@ include::{snippets}/get-category-by-id-empty/http-response.adoc[]
 
 include::{snippets}/get-category-by-id-empty/response-fields.adoc[]
 
+=== Получение всех категорий
+Операция возвращает все существующие категории
+
+==== CURL-запрос
+include::{snippets}/get-all-categories/curl-request.adoc[]
+
+==== HTTP-запрос
+include::{snippets}/get-all-categories/httpie-request.adoc[]
+
+==== HTTP-ответ
+include::{snippets}/get-all-categories/http-response.adoc[]
+
+==== Тело ответа
+include::{snippets}/get-all-categories/response-body.adoc[]
+
+==== Описание полей
+include::{snippets}/get-all-categories/response-fields.adoc[]
+
+==== Ошибки
+
+При вызове этого метода возможны следующие ошибки:
+
+[cols="1,2,2", options="header"]
+|===
+| Код   | Сообщение              | Описание
+| 404   | `Категории не найдены` | В базе нет ни одной категории
+|===
+
+Пример ответа при ошибке:
+
+include::{snippets}/get-all-categories-empty/http-response.adoc[]
+
+Описание полей при ошибке
+
+include::{snippets}/get-all-categories-empty/response-fields.adoc[]
 
 
+=== Сохранение категории
+Операция сохраняет новую категорию
+
+==== CURL-запрос
+include::{snippets}/save-category/curl-request.adoc[]
+
+==== HTTP-запрос
+include::{snippets}/save-category/http-request.adoc[]
+
+==== Свойства запроса
+include::{snippets}/save-category/request-fields.adoc[]
+
+==== HTTP-ответ
+include::{snippets}/save-category/http-response.adoc[]
+
+==== Тело ответа
+include::{snippets}/save-category/response-body.adoc[]
+
+==== Описание полей
+include::{snippets}/save-category/response-fields.adoc[]
+
+==== Ошибки
+
+При вызове этого метода возможны следующие ошибки:
+
+[cols="1,2,2", options="header"]
+|===
+| Код   | Сообщение              | Описание
+| 409   | `Дубликат категории`   | В базе уже существует такая категория
+| 400   | `Ошибка валидации`     | Передан некорректный объект
+|===
+
+Пример ответа при ошибке
+
+Дубликат:
+include::{snippets}/save-category-duplicate/http-response.adoc[]
+
+Ошибка валидации:
+include::{snippets}/save-category-validation-error/http-response.adoc[]
+
+Описание полей при ошибке
+
+include::{snippets}/save-category-duplicate/response-fields.adoc[]
 
 
 
