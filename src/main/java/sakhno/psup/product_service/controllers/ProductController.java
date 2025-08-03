@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import sakhno.psup.product_service.models.ProductEntity;
-import sakhno.psup.product_service.services.ProductService;
+import sakhno.psup.product_service.services.product.ProductService;
 
 @RestController
 @RequestMapping("api/v1/product-service/products")

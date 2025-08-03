@@ -6,6 +6,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import sakhno.psup.product_service.dto.category.CategoryDto;
 import sakhno.psup.product_service.dto.category.CategorySaveDto;
+import sakhno.psup.product_service.dto.category.CategorySimpleDto;
 import sakhno.psup.product_service.dto.category.CategoryUpdateDto;
 import sakhno.psup.product_service.models.CategoryEntity;
 
@@ -33,12 +34,24 @@ public interface CategoryMapper {
     @Mapping(target = "createdDate", expression = "java(getCurrentDateTime())")
     CategoryEntity mapCategorySaveDtoToEntity(CategorySaveDto categorySaveDto);
 
+    /**
+     * Метод редактирует сущность на основе DTO
+     * @param categoryUpdateDto - объект с данными для редактирования
+     * @param categoryEntity    - редактируемая сущность
+     */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "createdUserId", ignore = true)
     @Mapping(target = "updatedDate", expression = "java(getCurrentDateTime())")
     @Mapping(target = "updatedUserId", expression  = "java(getStaticUserId())")
-    CategoryEntity mapCategoryUpdateDtoToEntity(CategoryUpdateDto categoryUpdateDto, @MappingTarget CategoryEntity categoryEntity);
+    void mapCategoryUpdateDtoToEntity(CategoryUpdateDto categoryUpdateDto, @MappingTarget CategoryEntity categoryEntity);
+
+    /**
+     * Метод преобразует сущность категорию в облегченную DTO
+     * @param category - сущность категории
+     * @return - облегченная DTO категории
+     */
+    CategorySimpleDto mapToCategorySimpleDto(CategoryEntity category);
 
     //TODO: удалить после интеграции с пользовательским сервисом
     @Named("getStaticUserId")
