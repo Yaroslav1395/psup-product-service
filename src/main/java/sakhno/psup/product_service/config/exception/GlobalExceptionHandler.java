@@ -12,6 +12,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import reactor.core.publisher.Mono;
 import sakhno.psup.product_service.dto.ResponseDto;
 import sakhno.psup.product_service.exceptions.all.DuplicateEntityException;
+import sakhno.psup.product_service.exceptions.all.EntitiesNotFoundException;
 import sakhno.psup.product_service.exceptions.all.EntityNotFoundException;
 
 import java.util.stream.Collectors;
@@ -80,6 +81,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public Mono<ResponseEntity<ResponseDto<Object>>> handleEntityNotFoundException(EntityNotFoundException ex) {
         log.warn("Запись не найдена в базе: {}", ex.getMessage());
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(ResponseDto.fail(ex.getMessage())));
+        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseDto.fail(ex.getMessage())));
+    }
+
+    /**
+     * Метод обрабатывает исключения при отсутствии записи
+     * @param ex - исключение отсутствия
+     * @return - ответ с сообщением об ошибке
+     */
+    @ExceptionHandler(EntitiesNotFoundException.class)
+    public Mono<ResponseEntity<ResponseDto<Object>>> handleEntitiesNotFoundException(EntitiesNotFoundException ex) {
+        log.warn("Записи не найдены в базе: {}", ex.getMessage());
+        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseDto.fail(ex.getMessage())));
     }
 }

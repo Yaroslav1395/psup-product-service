@@ -1,7 +1,5 @@
 package sakhno.psup.product_service.controller;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +15,6 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.constraints.ConstraintDescriptions;
 import org.springframework.restdocs.payload.FieldDescriptor;
-import org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -29,7 +26,6 @@ import sakhno.psup.product_service.dto.category.CategoryDto;
 import sakhno.psup.product_service.dto.category.CategorySaveDto;
 import sakhno.psup.product_service.dto.category.CategoryUpdateDto;
 import sakhno.psup.product_service.exceptions.all.DuplicateEntityException;
-import sakhno.psup.product_service.exceptions.all.EntityNotFoundException;
 import sakhno.psup.product_service.repositories.CategoryRepository;
 import sakhno.psup.product_service.services.category.CategoryService;
 
