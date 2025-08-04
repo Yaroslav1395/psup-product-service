@@ -1,18 +1,17 @@
 package sakhno.psup.product_service.controllers;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import sakhno.psup.product_service.dto.ResponseDto;
 import sakhno.psup.product_service.dto.category.CategoryDto;
 import sakhno.psup.product_service.dto.subcategory.SubcategoryDto;
+import sakhno.psup.product_service.dto.subcategory.SubcategorySaveDto;
 import sakhno.psup.product_service.services.subcategory.SubcategoryService;
 
 import java.util.List;
@@ -39,6 +38,24 @@ public class SubcategoryController {
                 .doFirst(() -> log.info("Запрос на получение всех подкатегорий продукции"))
                 .collectList()
                 .filter(list -> !list.isEmpty())
+                .map(ResponseDto::ok)
+                .map(ResponseEntity::ok);
+    }
+
+    @GetMapping("/category/{id}")
+    private Mono<ResponseEntity<ResponseDto<List<SubcategoryDto>>>> getSubcategoriesByCategory(
+            @PathVariable @Positive(message = "Идентификатор категории должен быть положительным") Long id) {
+        return subcategoryService.getByCategoryId(id)
+                .doFirst(() -> log.info("Запрос на получение подкатегорий по идентификатору категории: {}", id))
+                .collectList()
+                .map(ResponseDto::ok)
+                .map(ResponseEntity::ok);
+    }
+
+    @PostMapping("/subcategory")
+    private Mono<ResponseEntity<ResponseDto<SubcategoryDto>>> saveSubcategory(@RequestBody @Valid SubcategorySaveDto subcategorySaveDto) {
+        return subcategoryService.save(subcategorySaveDto)
+                .doFirst(() -> log.info("Запрос на сохранение подкатегории: {}", subcategorySaveDto))
                 .map(ResponseDto::ok)
                 .map(ResponseEntity::ok);
     }

@@ -212,9 +212,9 @@ class CategoryControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fields.withPath("name", "Не может быть пустым. Должно содержать от 5 до 100 символов")
+                                fields.withPath("name", "Не может быть пустым. Должно содержать от 5 до 256 символов")
                                         .description("Название категории"),
-                                fields.withPath("description", "Не может быть пустым. Должно содержать от 5 до 1000 символов")
+                                fields.withPath("description", "Не может быть пустым. Должно содержать от 5 до 2000 символов")
                                         .description("Описание категории")
                         ),
                         responseFields(
@@ -307,9 +307,9 @@ class CategoryControllerTest {
                         preprocessResponse(prettyPrint()),
                         requestFields(
                                 fields.withPath("id","Не может быть пустым. Должно быть больше 0").description("ID категории, которую нужно обновить"),
-                                fields.withPath("name", "Не может быть пустым. Должно содержать от 5 до 100 символов")
+                                fields.withPath("name", "Не может быть пустым. Должно содержать от 5 до 256 символов")
                                         .description("Новое название категории"),
-                                fields.withPath("description", "Не может быть пустым. Должно содержать от 5 до 1000 символов")
+                                fields.withPath("description", "Не может быть пустым. Должно содержать от 5 до 2000 символов")
                                         .description("Новое описание категории")
                         ),
                         responseFields(
