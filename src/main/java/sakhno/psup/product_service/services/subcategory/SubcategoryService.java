@@ -4,6 +4,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import sakhno.psup.product_service.dto.subcategory.SubcategoryDto;
 import sakhno.psup.product_service.dto.subcategory.SubcategorySaveDto;
+import sakhno.psup.product_service.dto.subcategory.SubcategoryUpdateDto;
 
 public interface SubcategoryService {
     /**
@@ -33,4 +34,18 @@ public interface SubcategoryService {
      * @return - сохраненная подкатегория
      */
     Mono<SubcategoryDto> save(SubcategorySaveDto subcategorySaveDto);
+
+    /**
+     * Метод позволяет отредактировать подкатегорию
+     * @param subcategoryUpdateDto - редактируемая подкатегория
+     * @return - отредактированная подкатегория
+     */
+    Mono<SubcategoryDto> update(SubcategoryUpdateDto subcategoryUpdateDto);
+
+    /**
+     * Метод позволяет удалить подкатегорию
+     * @param id - идентификатор подкатегории
+     * @return - флаг удаления
+     */
+    Mono<Boolean> deleteById(Long id);
 }

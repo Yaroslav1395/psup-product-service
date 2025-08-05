@@ -85,7 +85,7 @@ public class CategoryServiceImpl implements CategoryService {
                                 "Категория не найдена по id: " + categoryUpdateDto.getId())))
                         .flatMap(existingCategory -> {
                             log.info("Категория найдена. Производится обновление");
-                            categoryMapper.mapCategoryUpdateDtoToEntity(categoryUpdateDto, existingCategory);
+                            categoryMapper.updateCategoryEntity(categoryUpdateDto, existingCategory);
                             return categoryRepository.save(existingCategory);
                         })
                         .doOnNext(saved -> log.info("Категория отредактирована"))

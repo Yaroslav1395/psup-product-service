@@ -2,10 +2,13 @@ package sakhno.psup.product_service.mappers.subcategory;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import sakhno.psup.product_service.dto.category.CategorySaveDto;
+import sakhno.psup.product_service.dto.category.CategoryUpdateDto;
 import sakhno.psup.product_service.dto.subcategory.SubcategoryDto;
 import sakhno.psup.product_service.dto.subcategory.SubcategorySaveDto;
+import sakhno.psup.product_service.dto.subcategory.SubcategoryUpdateDto;
 import sakhno.psup.product_service.mappers.category.CategoryMapper;
 import sakhno.psup.product_service.models.CategoryEntity;
 import sakhno.psup.product_service.models.SubcategoryEntity;
@@ -43,6 +46,20 @@ public interface SubcategoryMapper {
     @Mapping(target = "createdDate", expression = "java(getCurrentDateTime())")
     @Mapping(target = "createdUserId", expression  = "java(getStaticUserId())")
     SubcategoryEntity mapToSubCategoryEntity(SubcategorySaveDto subcategorySaveDto, Long categoryId);
+
+    /**
+     * Метод позволяет отредактировать сущность подкатегории на основе DTO
+     * @param subcategoryEntity - сущность подкатегории
+     * @param subcategoryUpdateDto - DTO подкатегории для редактирования
+     * @param categoryId - идентификатор категории
+     */
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "updatedUserId", expression = "java(getStaticUserId())")
+    @Mapping(target = "updatedDate", expression = "java(getCurrentDateTime())")
+    @Mapping(target = "createdUserId", ignore = true)
+    @Mapping(target = "createdDate", ignore = true)
+    @Mapping(target = "categoryId", source = "categoryId")
+    void updateSubcategoryEntity(@MappingTarget SubcategoryEntity subcategoryEntity, SubcategoryUpdateDto subcategoryUpdateDto, Long categoryId);
 
     //TODO: удалить после интеграции с пользовательским сервисом
     @Named("getStaticUserId")
