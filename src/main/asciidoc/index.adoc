@@ -28,22 +28,22 @@ PSUP Product Service — это компонент в микросервисно
 Операция возвращает категорию по её `ID`.
 
 ==== CURL-запрос
-include::{snippets}/get-category-by-id/curl-request.adoc[]
+include::{snippets}/category/get-category-by-id/curl-request.adoc[]
 
 ==== HTTP-запрос
-include::{snippets}/get-category-by-id/httpie-request.adoc[]
+include::{snippets}/category/get-category-by-id/httpie-request.adoc[]
 
 ==== Параметры пути
-include::{snippets}/get-category-by-id/path-parameters.adoc[]
+include::{snippets}/category/get-category-by-id/path-parameters.adoc[]
 
 ==== HTTP-ответ
-include::{snippets}/get-category-by-id/http-response.adoc[]
+include::{snippets}/category/get-category-by-id/http-response.adoc[]
 
 ==== Тело ответа
-include::{snippets}/get-category-by-id/response-body.adoc[]
+include::{snippets}/category/get-category-by-id/response-body.adoc[]
 
 ==== Описание полей
-include::{snippets}/get-category-by-id/response-fields.adoc[]
+include::{snippets}/category/get-category-by-id/response-fields.adoc[]
 
 ==== Ошибки
 
@@ -58,29 +58,30 @@ include::{snippets}/get-category-by-id/response-fields.adoc[]
 
 Пример ответа при ошибке:
 
-include::{snippets}/get-category-by-id-empty/http-response.adoc[]
+include::{snippets}/category/get-category-by-id-empty/http-response.adoc[]
 
 Описание полей при ошибке
 
-include::{snippets}/get-category-by-id-empty/response-fields.adoc[]
+include::{snippets}/category/get-category-by-id-empty/response-fields.adoc[]
 
 === Получение всех категорий
+
 Операция возвращает все существующие категории
 
 ==== CURL-запрос
-include::{snippets}/get-all-categories/curl-request.adoc[]
+include::{snippets}/category/get-all-categories/curl-request.adoc[]
 
 ==== HTTP-запрос
-include::{snippets}/get-all-categories/httpie-request.adoc[]
+include::{snippets}/category/get-all-categories/httpie-request.adoc[]
 
 ==== HTTP-ответ
-include::{snippets}/get-all-categories/http-response.adoc[]
+include::{snippets}/category/get-all-categories/http-response.adoc[]
 
 ==== Тело ответа
-include::{snippets}/get-all-categories/response-body.adoc[]
+include::{snippets}/category/get-all-categories/response-body.adoc[]
 
 ==== Описание полей
-include::{snippets}/get-all-categories/response-fields.adoc[]
+include::{snippets}/category/get-all-categories/response-fields.adoc[]
 
 ==== Ошибки
 
@@ -94,33 +95,33 @@ include::{snippets}/get-all-categories/response-fields.adoc[]
 
 Пример ответа при ошибке:
 
-include::{snippets}/get-all-categories-empty/http-response.adoc[]
+include::{snippets}/category/get-all-categories-empty/http-response.adoc[]
 
 Описание полей при ошибке
 
-include::{snippets}/get-all-categories-empty/response-fields.adoc[]
+include::{snippets}/category/get-all-categories-empty/response-fields.adoc[]
 
 
 === Сохранение категории
 Операция сохраняет новую категорию
 
 ==== CURL-запрос
-include::{snippets}/save-category/curl-request.adoc[]
+include::{snippets}/category/save-category/curl-request.adoc[]
 
 ==== HTTP-запрос
-include::{snippets}/save-category/http-request.adoc[]
+include::{snippets}/category/save-category/http-request.adoc[]
 
 ==== Свойства запроса
-include::{snippets}/save-category/request-fields.adoc[]
+include::{snippets}/category/save-category/request-fields.adoc[]
 
 ==== HTTP-ответ
-include::{snippets}/save-category/http-response.adoc[]
+include::{snippets}/category/save-category/http-response.adoc[]
 
 ==== Тело ответа
-include::{snippets}/save-category/response-body.adoc[]
+include::{snippets}/category/save-category/response-body.adoc[]
 
 ==== Описание полей
-include::{snippets}/save-category/response-fields.adoc[]
+include::{snippets}/category/save-category/response-fields.adoc[]
 
 ==== Ошибки
 
@@ -136,35 +137,35 @@ include::{snippets}/save-category/response-fields.adoc[]
 Пример ответа при ошибке
 
 Дубликат:
-include::{snippets}/save-category-duplicate/http-response.adoc[]
+include::{snippets}/category/save-category-duplicate/http-response.adoc[]
 
 Ошибка валидации:
-include::{snippets}/save-category-validation-error/http-response.adoc[]
+include::{snippets}/category/save-category-validation-error/http-response.adoc[]
 
 Описание полей при ошибке
 
-include::{snippets}/save-category-duplicate/response-fields.adoc[]
+include::{snippets}/category/save-category-duplicate/response-fields.adoc[]
 
 === Редактирование категории
 Операция редактирует существующую категорию
 
 ==== CURL-запрос
-include::{snippets}/update-category/curl-request.adoc[]
+include::{snippets}/category/update-category/curl-request.adoc[]
 
 ==== HTTP-запрос
-include::{snippets}/update-category/http-request.adoc[]
+include::{snippets}/category/update-category/http-request.adoc[]
 
 ==== Свойства запроса
-include::{snippets}/update-category/request-fields.adoc[]
+include::{snippets}/category/update-category/request-fields.adoc[]
 
 ==== HTTP-ответ
-include::{snippets}/update-category/http-response.adoc[]
+include::{snippets}/category/update-category/http-response.adoc[]
 
 ==== Тело ответа
-include::{snippets}/update-category/response-body.adoc[]
+include::{snippets}/category/update-category/response-body.adoc[]
 
 ==== Описание полей
-include::{snippets}/update-category/response-fields.adoc[]
+include::{snippets}/category/update-category/response-fields.adoc[]
 
 ==== Ошибки
 
@@ -181,36 +182,297 @@ include::{snippets}/update-category/response-fields.adoc[]
 Пример ответа при ошибке
 
 Дубликат:
-include::{snippets}/update-category-duplicate/http-response.adoc[]
+include::{snippets}/category/update-category-duplicate/http-response.adoc[]
 
 Ошибка валидации:
-include::{snippets}/update-category-validation-error/http-response.adoc[]
+include::{snippets}/category/update-category-validation-error/http-response.adoc[]
 
 Описание полей при ошибке
 
-include::{snippets}/update-category-duplicate/response-fields.adoc[]
+include::{snippets}/category/update-category-duplicate/response-fields.adoc[]
 
 === Удаление категории по идентификатору
 
 Операция удаляет категорию по её `ID`.
 
 ==== CURL-запрос
-include::{snippets}/delete-category/curl-request.adoc[]
+include::{snippets}/category/delete-category/curl-request.adoc[]
 
 ==== HTTP-запрос
-include::{snippets}/delete-category/httpie-request.adoc[]
+include::{snippets}/category/delete-category/httpie-request.adoc[]
 
 ==== Параметры пути
-include::{snippets}/delete-category/path-parameters.adoc[]
+include::{snippets}/category/delete-category/path-parameters.adoc[]
 
 ==== HTTP-ответ
-include::{snippets}/delete-category/http-response.adoc[]
+include::{snippets}/category/delete-category/http-response.adoc[]
 
 ==== Тело ответа
-include::{snippets}/delete-category/response-body.adoc[]
+include::{snippets}/category/delete-category/response-body.adoc[]
 
 ==== Описание полей
-include::{snippets}/delete-category/response-fields.adoc[]
+include::{snippets}/category/delete-category/response-fields.adoc[]
+
+==== Ошибки
+
+При вызове этого метода возможны следующие ошибки:
+
+[cols="1,2,2", options="header"]
+|===
+| Код   | Сообщение                         | Описание
+| 400   | `Ошибка валидации`                | Передан некорректный параметр
+| 409   | `Нарущение ссылочной целостности` | На категорию ссылаются подкатегории
+|===
+
+== Работа с сущностью "Подкатегория"
+
+Сущность `Подкатегория` используется для группировки товаров по типу. Каждая подкатегория имеет уникальное имя и
+может содержать вложенные продукты.
+
+=== Архитектура
+
+* `SubcategoryController` — REST-контроллер, предоставляющий CRUD-интерфейс для категорий.
+* `SubcategoryService` — слой бизнес-логики.
+* `SubcategoryMapper` — преобразование объектов.
+* `CategoryRepository` — реактивный репозиторий для доступа к данным категорий.
+* `SubcategoryRepository` — реактивный репозиторий для доступа к данным подкатегорий.
+* `CategoryControllerTest` — модульные тесты и генерация документации с помощью Spring REST Docs.
+
+=== Получение категории по идентификатору
+
+Операция возвращает подкатегорию по её `ID`.
+
+==== CURL-запрос
+include::{snippets}/subcategory/get-subcategory-by-id/curl-request.adoc[]
+
+==== HTTP-запрос
+include::{snippets}/subcategory/get-subcategory-by-id/httpie-request.adoc[]
+
+==== Параметры пути
+include::{snippets}/subcategory/get-subcategory-by-id/path-parameters.adoc[]
+
+==== HTTP-ответ
+include::{snippets}/subcategory/get-subcategory-by-id/http-response.adoc[]
+
+==== Тело ответа
+include::{snippets}/subcategory/get-subcategory-by-id/response-body.adoc[]
+
+==== Описание полей
+include::{snippets}/subcategory/get-subcategory-by-id/response-fields.adoc[]
+
+==== Ошибки
+
+При вызове этого метода возможны следующие ошибки:
+
+[cols="1,2,2", options="header"]
+|===
+| Код   | Сообщение                 | Описание
+| 404   | `Подкатегория не найдена` | Указанная подкатегория не существует
+| 404   | `Категория не найдена`    | При сборе DTO категория не найдена
+| 400   | `Ошибка валидации`        | Передан некорректный параметр
+|===
+
+Пример ответа при ошибке:
+
+include::{snippets}/subcategory/get-subcategory-by-id-empty/http-response.adoc[]
+
+Описание полей при ошибке
+
+include::{snippets}/subcategory/get-subcategory-by-id-empty/response-fields.adoc[]
+
+=== Получение категорий по идентификатору категории
+
+Операция возвращает подкатегорию по `ID` подкатегории.
+
+==== CURL-запрос
+include::{snippets}/subcategory/get-by-category-id/curl-request.adoc[]
+
+==== HTTP-запрос
+include::{snippets}/subcategory/get-by-category-id/httpie-request.adoc[]
+
+==== Параметры пути
+include::{snippets}/subcategory/get-by-category-id/path-parameters.adoc[]
+
+==== HTTP-ответ
+include::{snippets}/subcategory/get-by-category-id/http-response.adoc[]
+
+==== Тело ответа
+include::{snippets}/subcategory/get-by-category-id/response-body.adoc[]
+
+==== Описание полей
+include::{snippets}/subcategory/get-by-category-id/response-fields.adoc[]
+
+==== Ошибки
+
+При вызове этого метода возможны следующие ошибки:
+
+[cols="1,2,2", options="header"]
+|===
+| Код   | Сообщение                 | Описание
+| 404   | `Подкатегории не найдены` | Указанная подкатегория не существует
+| 404   | `Категория не найдена`    | При сборе DTO категория не найдена
+| 400   | `Ошибка валидации`        | Передан некорректный параметр
+|===
+
+Пример ответа при ошибке:
+
+include::{snippets}/subcategory/get-subcategory-by-id-empty/http-response.adoc[]
+
+Описание полей при ошибке
+
+include::{snippets}/subcategory/get-subcategory-by-id-empty/response-fields.adoc[]
+
+=== Получение всех подкатегории
+
+Операция возвращает все существующие подкатегории
+
+==== CURL-запрос
+include::{snippets}/subcategory/get-all-subcategories/curl-request.adoc[]
+
+==== HTTP-запрос
+include::{snippets}/subcategory/get-all-subcategories/httpie-request.adoc[]
+
+==== HTTP-ответ
+include::{snippets}/subcategory/get-all-subcategories/http-response.adoc[]
+
+==== Тело ответа
+include::{snippets}/subcategory/get-all-subcategories/response-body.adoc[]
+
+==== Описание полей
+include::{snippets}/subcategory/get-all-subcategories/response-fields.adoc[]
+
+==== Ошибки
+
+При вызове этого метода возможны следующие ошибки:
+
+[cols="1,2,2", options="header"]
+|===
+| Код   | Сообщение                 | Описание
+| 404   | `Подкатегории не найдены` | В базе нет ни одной подкатегории
+| 404   | `Категории не найдены`    | При преобразовании в DTO не найдена категория
+|===
+
+Пример ответа при ошибке:
+
+include::{snippets}/subcategory/get-all-subcategories-empty/http-response.adoc[]
+
+Описание полей при ошибке
+
+include::{snippets}/subcategory/get-all-subcategories-empty/response-fields.adoc[]
+
+=== Сохранение подкатегории
+
+Операция сохраняет новую подкатегории
+
+==== CURL-запрос
+include::{snippets}/subcategory/save-subcategory/curl-request.adoc[]
+
+==== HTTP-запрос
+include::{snippets}/subcategory/save-subcategory/http-request.adoc[]
+
+==== Свойства запроса
+include::{snippets}/subcategory/save-subcategory/request-fields.adoc[]
+
+==== HTTP-ответ
+include::{snippets}/subcategory/save-subcategory/http-response.adoc[]
+
+==== Тело ответа
+include::{snippets}/subcategory/save-subcategory/response-body.adoc[]
+
+==== Описание полей
+include::{snippets}/subcategory/save-subcategory/response-fields.adoc[]
+
+==== Ошибки
+
+При вызове этого метода возможны следующие ошибки:
+
+[cols="1,2,2", options="header"]
+|===
+| Код   | Сообщение                 | Описание
+| 409   | `Дубликат подкатегории`   | В базе уже существует такая подкатегория
+| 400   | `Ошибка валидации`        | Передан некорректный объект
+| 404   | `Категория не найдена`    | Не найдена подкатегория для присвоения
+|===
+
+Пример ответа при ошибке
+
+Дубликат:
+include::{snippets}/subcategory/save-subcategory-duplicate/http-response.adoc[]
+
+Ошибка валидации:
+include::{snippets}/subcategory/save-subcategory-validation-error/http-response.adoc[]
+
+Описание полей при ошибке
+
+include::{snippets}/subcategory/save-subcategory-duplicate/response-fields.adoc[]
+
+=== Редактирование подкатегории
+Операция редактирует существующую категорию
+
+==== CURL-запрос
+include::{snippets}/subcategory/update-subcategory/curl-request.adoc[]
+
+==== HTTP-запрос
+include::{snippets}/subcategory/update-subcategory/http-request.adoc[]
+
+==== Свойства запроса
+include::{snippets}/subcategory/update-subcategory/request-fields.adoc[]
+
+==== HTTP-ответ
+include::{snippets}/subcategory/update-subcategory/http-response.adoc[]
+
+==== Тело ответа
+include::{snippets}/subcategory/update-subcategory/response-body.adoc[]
+
+==== Описание полей
+include::{snippets}/subcategory/update-subcategory/response-fields.adoc[]
+
+==== Ошибки
+
+При вызове этого метода возможны следующие ошибки:
+
+[cols="1,2,2", options="header"]
+|===
+| Код   | Сообщение                 | Описание
+| 409   | `Дубликат подкатегории`   | В базе уже существует такая категория
+| 400   | `Ошибка валидации`        | Передан некорректный объект
+| 404   | `Отстутсвие покатегории`  | По id не найдено подкатегории для редактирования
+| 404   | `Отстутсвие категории`    | По id не найдено категории для присвоения
+|===
+
+Пример ответа при ошибке
+
+Дубликат:
+include::{snippets}/subcategory/update-subcategory-duplicate/http-response.adoc[]
+
+Ошибка валидации:
+include::{snippets}/subcategory/update-subcategory-validation-error/http-response.adoc[]
+
+Описание полей при ошибке
+
+include::{snippets}/subcategory/update-subcategory-duplicate/response-fields.adoc[]
+
+=== Удаление подкатегории по идентификатору
+
+Операция удаляет подкатегорию по её `ID`.
+
+==== CURL-запрос
+include::{snippets}/subcategory/delete-subcategory/curl-request.adoc[]
+
+==== HTTP-запрос
+include::{snippets}/subcategory/delete-subcategory/httpie-request.adoc[]
+
+==== Параметры пути
+include::{snippets}/subcategory/delete-subcategory/path-parameters.adoc[]
+
+==== HTTP-ответ
+include::{snippets}/subcategory/delete-subcategory/http-response.adoc[]
+
+==== Тело ответа
+include::{snippets}/subcategory/delete-subcategory/response-body.adoc[]
+
+==== Описание полей
+include::{snippets}/subcategory/delete-subcategory/response-fields.adoc[]
 
 ==== Ошибки
 

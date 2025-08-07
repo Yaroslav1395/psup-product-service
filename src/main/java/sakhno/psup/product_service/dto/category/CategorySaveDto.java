@@ -18,6 +18,7 @@ public class CategorySaveDto {
     @NotEmpty(message = "Название категории не может быть пустым")
     @Size(min = 5, max = 256, message = "Название категории должно содержать от 5 до 256 символов")
     private String name;
+
     @NotEmpty(message = "Описание категории не может быть пустым")
     @Size(min = 5, max = 2000, message = "Описание категории должно содержать от 5 до 2000 символов")
     private String description;

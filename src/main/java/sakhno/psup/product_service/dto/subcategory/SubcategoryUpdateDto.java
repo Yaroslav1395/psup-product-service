@@ -10,13 +10,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Объект содержит данные для сохранения подкатегории
+ * Объект содержит данные для редактирования подкатегории
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SubcategorySaveDto {
+public class SubcategoryUpdateDto {
+    @NotNull(message = "Идентификатор категории не может быть пустым")
+    @Positive(message = "Идентификатор категории должен быть положительным")
+    private Long id;
+
     @NotEmpty(message = "Имя подкатегории не может быть пустым")
     @Size(min = 5, max = 256, message = "Имя подкатегории должно содержать от 5 до 256 символов")
     private String name;

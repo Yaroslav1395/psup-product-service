@@ -7,6 +7,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import sakhno.psup.product_service.dto.subcategory.SubcategoryDto;
 import sakhno.psup.product_service.dto.subcategory.SubcategorySaveDto;
+import sakhno.psup.product_service.dto.subcategory.SubcategoryUpdateDto;
+import sakhno.psup.product_service.exceptions.all.DuplicateEntityException;
 import sakhno.psup.product_service.exceptions.all.EntitiesNotFoundException;
 import sakhno.psup.product_service.exceptions.all.EntityNotFoundException;
 import sakhno.psup.product_service.mappers.subcategory.SubcategoryMapper;
@@ -36,13 +38,13 @@ public class SubcategoryServiceImpl implements SubcategoryService  {
      */
     public Mono<SubcategoryDto> getById(Long id) {
         return subcategoryRepository.findById(id)
-                .doOnSubscribe(subscription -> log.info("Поиск подкатегории по id: {}", id))
+                .doOnSubscribe(subscription -> logSearchSubcategoryById(id))
                 .switchIfEmpty(Mono.error(new EntityNotFoundException("Подкатегория с id %d не найдена".formatted(id))))
                 .doOnNext(subcategory -> this.logCategorySearchById(subcategory.getCategoryId()))
                 .flatMap(subcategory -> categoryRepository.findById(subcategory.getCategoryId())
                         .switchIfEmpty(Mono.error(new EntityNotFoundException(
                                 "Категория с id %d не найдена".formatted(subcategory.getCategoryId()))))
-                        .doOnNext(category -> log.info("Преобразование подкатегории и категории в DTO"))
+                        .doOnNext(category -> logSubcategoryMappingStart())
                         .map(category -> subcategoryMapper.mapToSubCategoryDto(subcategory, category)))
                 .doOnSuccess(dto -> logSuccessMappingDto());
     }
@@ -76,7 +78,7 @@ public class SubcategoryServiceImpl implements SubcategoryService  {
                         subcategoryRepository.findByCategoryId(categoryId)
                                 .doOnSubscribe(subscription -> log.info("Поиск подкатегорий по id категории: {}", categoryId))
                                 .switchIfEmpty(Mono.error(new EntitiesNotFoundException("Подкатегории не найдены")))
-                                .doOnNext(subcategory -> log.info("Преобразование подкатегорий в DTO"))
+                                .doOnNext(subcategory -> logSubcategoryMappingStart())
                                 .map(subcategory -> subcategoryMapper.mapToSubCategoryDto(subcategory, category))
                                 .doOnComplete(this::logSubcategoryMappingEnd)
         );
@@ -89,15 +91,70 @@ public class SubcategoryServiceImpl implements SubcategoryService  {
      */
     @Override
     public Mono<SubcategoryDto> save(SubcategorySaveDto subcategorySaveDto) {
-        return categoryRepository.findById(subcategorySaveDto.getCategoryId())
-                .doOnSubscribe(subscription -> this.logCategorySearchById(subcategorySaveDto.getCategoryId()))
-                .switchIfEmpty(Mono.error(new EntityNotFoundException("Категория с id %s не найдена".formatted(
-                        subcategorySaveDto.getCategoryId()))))
-                .flatMap(category -> subcategoryRepository.save(subcategoryMapper.mapToSubCategoryEntity(subcategorySaveDto, category.getId()))
-                        .doOnSubscribe(subscription -> log.info("Сохранение подкатегории"))
-                        .doOnNext(subcategory -> log.info("Преобразование подкатегории в DTO"))
-                        .map(subcategoryEntity -> subcategoryMapper.mapToSubCategoryDto(subcategoryEntity, category))
-                        .doOnSuccess(dto -> logSuccessMappingDto()));
+        return subcategoryRepository.findByNameAndCategoryId(subcategorySaveDto.getName(), subcategorySaveDto.getCategoryId())
+                .doOnSubscribe(subscription -> logSubcategoryDuplicateCheck())
+                .flatMap(existing -> Mono.<SubcategoryDto>error(new DuplicateEntityException(
+                        "Подкатегория с именем: " + subcategorySaveDto.getName() + " уже существует")))
+                .switchIfEmpty(categoryRepository.findById(subcategorySaveDto.getCategoryId())
+                        .doOnSubscribe(subscription -> this.logCategorySearchById(subcategorySaveDto.getCategoryId()))
+                        .switchIfEmpty(Mono.error(new EntityNotFoundException("Категория с id %s не найдена".formatted(
+                                subcategorySaveDto.getCategoryId()))))
+                        .flatMap(category -> subcategoryRepository.save(subcategoryMapper.mapToSubCategoryEntity(subcategorySaveDto, category.getId()))
+                                .doOnSubscribe(subscription -> log.info("Сохранение подкатегории"))
+                                .doOnNext(subcategory -> logSubcategoryMappingStart())
+                                .map(subcategoryEntity -> subcategoryMapper.mapToSubCategoryDto(subcategoryEntity, category))
+                                .doOnSuccess(dto -> logSuccessMappingDto())));
+    }
+
+    /**
+     * Метод позволяет отредактировать подкатегорию
+     * @param dto - редактируемая подкатегория
+     * @return - отредактированная подкатегория
+     */
+    @Override
+    public Mono<SubcategoryDto> update(SubcategoryUpdateDto dto) {
+        Mono<Void> duplicateCheck = subcategoryRepository
+                .findByNameAndIdNotAndCategoryId(dto.getName(), dto.getId(), dto.getCategoryId())
+                .doOnSubscribe(s -> logSubcategoryDuplicateCheck())
+                .flatMap(existing -> Mono.error(new DuplicateEntityException(
+                        "Подкатегория с именем: " + dto.getName() + " уже существует")));
+
+        Mono<CategoryEntity> categoryMono = categoryRepository.findById(dto.getCategoryId())
+                .doOnSubscribe(s -> logCategorySearchById(dto.getCategoryId()))
+                .switchIfEmpty(Mono.error(new EntityNotFoundException(
+                        "Категория с id %s не найдена".formatted(dto.getCategoryId()))));
+
+        Mono<SubcategoryEntity> subcategoryMono = subcategoryRepository.findById(dto.getId())
+                .doOnSubscribe(s -> logSearchSubcategoryById(dto.getId()))
+                .switchIfEmpty(Mono.error(new EntityNotFoundException(
+                        "Подкатегория с id %s не найдена".formatted(dto.getId()))));
+
+        return duplicateCheck.then(Mono.zip(categoryMono, subcategoryMono)
+                .flatMap(tuple -> {
+                    CategoryEntity findCategory = tuple.getT1();
+                    SubcategoryEntity findSubcategory = tuple.getT2();
+                    subcategoryMapper.updateSubcategoryEntity(findSubcategory,dto, findCategory.getId());
+                    return subcategoryRepository.save(findSubcategory)
+                            .doOnSubscribe(subscription -> log.info("Редактирование подкатегории"))
+                            .doOnNext(subcategory -> logSubcategoryMappingStart())
+                            .map(updatedSubcategory -> subcategoryMapper.mapToSubCategoryDto(updatedSubcategory, findCategory))
+                            .doOnSuccess(updatedDto -> logSuccessMappingDto());
+                        })
+        );
+    }
+
+    /**
+     * Метод позволяет удалить подкатегорию
+     * @param id - идентификатор подкатегории
+     * @return - флаг удаления
+     */
+    @Override
+    public Mono<Boolean> deleteById(Long id) {
+        return subcategoryRepository.deleteById(id)
+                .doOnSubscribe(subscription -> log.info("Удаление подкатегории по идентификатору: {}", id))
+                .then(subcategoryRepository.findById(id))
+                .map(found -> false)
+                .defaultIfEmpty(true);
     }
 
 
@@ -131,6 +188,14 @@ public class SubcategoryServiceImpl implements SubcategoryService  {
     }
 
     /**
+     * Метод логиреует поиск подкатегории по id. Для избежания warning
+     * @param subcategoryId - идентификатор подкатегории
+     */
+    private void logSearchSubcategoryById(Long subcategoryId) {
+        log.info("Поиск подкатегории по id: {}", subcategoryId);
+    }
+
+    /**
      * Логирует поиск категории по id. Для избежания warning
      * @param categoryId - идентификатор категории
      */
@@ -145,7 +210,21 @@ public class SubcategoryServiceImpl implements SubcategoryService  {
         log.info("Преобразование списка сущностей подкатегорий в DTO завершено");
     }
 
+    private void  logSubcategoryMappingStart() {
+        log.info("Преобразование подкатегории в DTO");
+    }
+
+    /**
+     * Логирует завершение преобразование сущности подкатегории в DTO
+     */
     private void logSuccessMappingDto() {
         log.info("DTO подкатегории успешно собран");
+    }
+
+    /**
+     * Логирует проверку на дубликат подкатегории
+     */
+    private void logSubcategoryDuplicateCheck() {
+        log.info("Проверка на дубликат подкатегории");
     }
 }

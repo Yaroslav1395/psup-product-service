@@ -1,6 +1,5 @@
 package sakhno.psup.product_service.controller;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -11,7 +10,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.constraints.ConstraintDescriptions;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -40,7 +38,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.document;
-import static org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.documentationConfiguration;
 
 @ExtendWith(RestDocumentationExtension.class)
 @WebFluxTest(controllers = CategoryController.class)
@@ -61,14 +58,6 @@ class CategoryControllerTest {
     @Autowired
     private ApplicationContext context;
 
-    @BeforeEach
-    void setUp(RestDocumentationContextProvider restDocumentation) {
-        WebTestClient client = WebTestClient.bindToApplicationContext(context)
-                .configureClient()
-                .filter(documentationConfiguration(restDocumentation))
-                .build();
-    }
-
     @Test
     void getCategoryById() {
         Mockito.when(categoryService.getById(anyLong())).thenReturn(Mono.just(getValidCategoryDto()));
@@ -81,7 +70,7 @@ class CategoryControllerTest {
                 .expectBody()
                 .jsonPath("$.data.name").isEqualTo("Категория")
                 .jsonPath("$.data.description").isEqualTo("Категория для тестов")
-                .consumeWith(document("get-category-by-id",
+                .consumeWith(document("category/get-category-by-id",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -112,7 +101,7 @@ class CategoryControllerTest {
                 .expectBody()
                 .jsonPath("$.message").isEqualTo(String.format("Категория +%d не найдена",999L))
                 .jsonPath("$.state").isEqualTo("FAIL")
-                .consumeWith(document("get-category-by-id-empty",
+                .consumeWith(document("category/get-category-by-id-empty",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -149,7 +138,7 @@ class CategoryControllerTest {
                 .jsonPath("$.data[1].createdUserId").isEqualTo(1L)
                 .jsonPath("$.data[1].createdDate").isNotEmpty()
                 .jsonPath("$.data[1].updatedDate").isNotEmpty()
-                .consumeWith(document("get-all-categories",
+                .consumeWith(document("category/get-all-categories",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         responseFields(
@@ -177,7 +166,7 @@ class CategoryControllerTest {
                 .expectBody()
                 .jsonPath("$.message").isEqualTo("Категории не найдены")
                 .jsonPath("$.state").isEqualTo("FAIL")
-                .consumeWith(document("get-all-categories-empty",
+                .consumeWith(document("category/get-all-categories-empty",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         responseFields(
@@ -208,7 +197,7 @@ class CategoryControllerTest {
                 .jsonPath("$.data.updatedUserId").isEmpty()
                 .jsonPath("$.data.createdDate").isNotEmpty()
                 .jsonPath("$.data.updatedDate").isEmpty()
-                .consumeWith(document("save-category",
+                .consumeWith(document("category/save-category",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
@@ -246,7 +235,7 @@ class CategoryControllerTest {
                 .expectBody()
                 .jsonPath("$.state").isEqualTo("FAIL")
                 .jsonPath("$.message").value(containsString("уже существует"))
-                .consumeWith(document("save-category-duplicate",
+                .consumeWith(document("category/save-category-duplicate",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         responseFields(
@@ -269,7 +258,7 @@ class CategoryControllerTest {
                 .expectBody()
                 .jsonPath("$.state").isEqualTo("FAIL")
                 .jsonPath("$.message").value(containsString("не может быть пустым"))
-                .consumeWith(document("save-category-validation-error",
+                .consumeWith(document("category/save-category-validation-error",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         responseFields(
@@ -302,7 +291,7 @@ class CategoryControllerTest {
                 .jsonPath("$.data.updatedUserId").isEqualTo(1L)
                 .jsonPath("$.data.createdDate").isNotEmpty()
                 .jsonPath("$.data.updatedDate").isNotEmpty()
-                .consumeWith(document("update-category",
+                .consumeWith(document("category/update-category",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
@@ -340,7 +329,7 @@ class CategoryControllerTest {
                 .expectBody()
                 .jsonPath("$.state").isEqualTo("FAIL")
                 .jsonPath("$.message").value(containsString("уже существует"))
-                .consumeWith(document("update-category-duplicate",
+                .consumeWith(document("category/update-category-duplicate",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         responseFields(
@@ -364,7 +353,7 @@ class CategoryControllerTest {
                 .expectBody()
                 .jsonPath("$.state").isEqualTo("FAIL")
                 .jsonPath("$.message").value(containsString("не может быть пустым"))
-                .consumeWith(document("update-category-validation-error",
+                .consumeWith(document("category/update-category-validation-error",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         responseFields(
@@ -387,7 +376,7 @@ class CategoryControllerTest {
                 .jsonPath("$.state").isEqualTo("SUCCESS")
                 .jsonPath("$.message").isEqualTo("OK")
                 .jsonPath("$.data").isEqualTo(true)
-                .consumeWith(document("delete-category",
+                .consumeWith(document("category/delete-category",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(

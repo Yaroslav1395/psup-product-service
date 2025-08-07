@@ -44,7 +44,7 @@ public interface CategoryMapper {
     @Mapping(target = "createdUserId", ignore = true)
     @Mapping(target = "updatedDate", expression = "java(getCurrentDateTime())")
     @Mapping(target = "updatedUserId", expression  = "java(getStaticUserId())")
-    void mapCategoryUpdateDtoToEntity(CategoryUpdateDto categoryUpdateDto, @MappingTarget CategoryEntity categoryEntity);
+    void updateCategoryEntity(CategoryUpdateDto categoryUpdateDto, @MappingTarget CategoryEntity categoryEntity);
 
     /**
      * Метод преобразует сущность категорию в облегченную DTO

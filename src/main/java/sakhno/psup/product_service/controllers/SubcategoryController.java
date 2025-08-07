@@ -12,6 +12,7 @@ import sakhno.psup.product_service.dto.ResponseDto;
 import sakhno.psup.product_service.dto.category.CategoryDto;
 import sakhno.psup.product_service.dto.subcategory.SubcategoryDto;
 import sakhno.psup.product_service.dto.subcategory.SubcategorySaveDto;
+import sakhno.psup.product_service.dto.subcategory.SubcategoryUpdateDto;
 import sakhno.psup.product_service.services.subcategory.SubcategoryService;
 
 import java.util.List;
@@ -37,7 +38,6 @@ public class SubcategoryController {
         return subcategoryService.getAll()
                 .doFirst(() -> log.info("Запрос на получение всех подкатегорий продукции"))
                 .collectList()
-                .filter(list -> !list.isEmpty())
                 .map(ResponseDto::ok)
                 .map(ResponseEntity::ok);
     }
@@ -53,9 +53,28 @@ public class SubcategoryController {
     }
 
     @PostMapping("/subcategory")
-    private Mono<ResponseEntity<ResponseDto<SubcategoryDto>>> saveSubcategory(@RequestBody @Valid SubcategorySaveDto subcategorySaveDto) {
+    private Mono<ResponseEntity<ResponseDto<SubcategoryDto>>> saveSubcategory(
+            @RequestBody @Valid SubcategorySaveDto subcategorySaveDto) {
         return subcategoryService.save(subcategorySaveDto)
                 .doFirst(() -> log.info("Запрос на сохранение подкатегории: {}", subcategorySaveDto))
+                .map(ResponseDto::ok)
+                .map(ResponseEntity::ok);
+    }
+
+    @PutMapping("/subcategory")
+    private Mono<ResponseEntity<ResponseDto<SubcategoryDto>>> updateSubcategory(
+            @RequestBody @Valid SubcategoryUpdateDto subcategoryUpdateDto) {
+        return subcategoryService.update(subcategoryUpdateDto)
+                .doFirst(() -> log.info("Запрос на обновление подкатегории: {}", subcategoryUpdateDto))
+                .map(ResponseDto::ok)
+                .map(ResponseEntity::ok);
+    }
+
+    @DeleteMapping("/subcategory/{id}")
+    private Mono<ResponseEntity<ResponseDto<Boolean>>> deleteSubcategory(
+            @PathVariable @Positive(message = "Идентификатор подкатегории должен быть положительным") Long id) {
+        return subcategoryService.deleteById(id)
+                .doFirst(() -> log.info("Запрос на удаление подкатегории по идентификатору: {}", id))
                 .map(ResponseDto::ok)
                 .map(ResponseEntity::ok);
     }
