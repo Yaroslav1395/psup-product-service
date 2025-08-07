@@ -38,7 +38,6 @@ public class SubcategoryController {
         return subcategoryService.getAll()
                 .doFirst(() -> log.info("Запрос на получение всех подкатегорий продукции"))
                 .collectList()
-                .filter(list -> !list.isEmpty())
                 .map(ResponseDto::ok)
                 .map(ResponseEntity::ok);
     }

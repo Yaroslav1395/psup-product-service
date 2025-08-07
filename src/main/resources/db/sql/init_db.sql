@@ -22,5 +22,5 @@ CREATE TABLE subcategories (
     updated_date TIMESTAMP,
     created_user_id BIGINT NOT NULL,
     updated_user_id BIGINT,
-    CONSTRAINT fk_subcategory_category FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+    CONSTRAINT fk_subcategory_category FOREIGN KEY (category_id) REFERENCES categories(id)
 );

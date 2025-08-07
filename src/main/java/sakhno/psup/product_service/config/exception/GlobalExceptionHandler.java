@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
     public Mono<ResponseEntity<ResponseDto<Object>>> handleR2dbcDataIntegrityViolationException(R2dbcDataIntegrityViolationException ex) {
         log.error("Возникла ошибка при запросе в базу: {}", ex.getMessage());
         String message = "Нарушение ограничения целостности данных: " + ex.getMessage();
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(ResponseDto.error(message)));
+        return Mono.just(ResponseEntity.status(HttpStatus.CONFLICT).body(ResponseDto.error(message)));
     }
 
     /**
